@@ -119,6 +119,13 @@ class PolarisCli:
 
 
 def main() -> None:
+    try:
+        import argcomplete
+        parser = Parser._build_parser()
+        argcomplete.autocomplete(parser)
+    except ImportError:
+        pass  # argcomplete not available, continue without completion
+    
     PolarisCli.execute()
 
 

@@ -21,6 +21,28 @@
 set -e
 
 dir=${0%/*}
+
+# ---- Fast path for shell completion (argcomplete) ----
+if [ -n "${_ARGCOMPLETE:-}" ]; then
+  echo "ARGCOMPLETE RUN: _ARGCOMPLETE=$_ARGCOMPLETE" >> /tmp/polaris-ac.log
+  env | grep -E '(_ARGCOMPLETE|COMP_LINE|COMP_POINT|_ARC_)' >> /tmp/polaris-ac.log
+  # If venv doesn't exist, don't try to create/repair during completion.
+  if [ ! -d "${dir}/polaris-venv" ]; then
+    exit 0
+  fi
+
+  # Activate venv if needed (cheap).
+  if [ -z "${VIRTUAL_ENV:-}" ] || [ "$(realpath "$VIRTUAL_ENV")" != "$(realpath "${dir}/polaris-venv")" ]; then
+    source "${dir}/polaris-venv/bin/activate"
+  fi
+
+  # If polaris isn't available, don't repair during completion.
+  command -v polaris >/dev/null 2>&1 || exit 0
+
+  exec polaris "$@"
+fi
+# ------------------------------------------------------
+
 repair=false
 for arg in "$@"; do
   if [ "$arg" == "--repair" ]; then

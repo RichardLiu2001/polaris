@@ -126,6 +126,11 @@ class Parser(object):
     @staticmethod
     def parse(input: Optional[List[str]] = None) -> argparse.Namespace:
         parser = Parser._build_parser()
+        try:
+            import argcomplete
+            argcomplete.autocomplete(parser)
+        except ImportError:
+            pass  # argcomplete not available, continue without completion
         return parser.parse_args(input)
 
     @staticmethod
