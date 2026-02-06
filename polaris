@@ -24,8 +24,6 @@ dir=${0%/*}
 
 # ---- Fast path for shell completion (argcomplete) ----
 if [ -n "${_ARGCOMPLETE:-}" ]; then
-  echo "ARGCOMPLETE RUN: _ARGCOMPLETE=$_ARGCOMPLETE" >> /tmp/polaris-ac.log
-  env | grep -E '(_ARGCOMPLETE|COMP_LINE|COMP_POINT|_ARC_)' >> /tmp/polaris-ac.log
   # If venv doesn't exist, don't try to create/repair during completion.
   if [ ! -d "${dir}/polaris-venv" ]; then
     exit 0
@@ -41,7 +39,6 @@ if [ -n "${_ARGCOMPLETE:-}" ]; then
 
   exec polaris "$@"
 fi
-# ------------------------------------------------------
 
 repair=false
 for arg in "$@"; do

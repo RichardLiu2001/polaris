@@ -130,7 +130,7 @@ class Parser(object):
             import argcomplete
             argcomplete.autocomplete(parser)
         except ImportError:
-            pass  # argcomplete not available, continue without completion
+            pass
         return parser.parse_args(input)
 
     @staticmethod
